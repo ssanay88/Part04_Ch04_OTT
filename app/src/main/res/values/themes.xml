@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+    <!-- NoActionBar : 기존의 액션바는 삭제하고 커스텀한 액션바를 보여준다.   -->
     <style name="Theme.Part04_Ch04_OTT" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
@@ -14,6 +15,7 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <!-- App Bar에 대한 다양한 커스텀 가능  -->
     <style name="AppTheme.AppBarOverlay" parent="Theme.Part04_Ch04_OTT">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/black</item>

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 버튼에 대한 설정만 해주면 된다. -->
 <MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:motion="http://schemas.android.com/tools">
+
 
     <Transition
         app:constraintSetEnd="@id/end"
@@ -25,6 +27,7 @@
         </KeyFrameSet>
     </Transition>
 
+    <!-- Vertical_bias가 1.4에서 0.97로 이동하면서 1을 넘어서 하단에 숨어있다가 등장   -->
     <ConstraintSet android:id="@+id/start">
         <Constraint android:id="@+id/button"
             android:layout_width="0dp"

@@ -3,12 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
+    <!-- 모션의 기본 정의가 포함 -->
+    <!--
+    Start,End는 모션의 엔드포인트 참조 , duration은 모션이 완료되는 데 걸리는 시간간
+   -->
     <Transition
         app:constraintSetEnd="@+id/end"
         app:constraintSetStart="@+id/start"
         app:duration="500">
 
         <KeyFrameSet>
+            <!-- 프레임 포지션이 0에서 100까지 갈때 크기 변화, alpha(투명도) 0에서 1로 증가, 가로,세로의 scale도 0.8에서 1로 증가하다록 설정 -->
             <KeyAttribute
                 android:scaleX="0.8"
                 android:scaleY="0.8"
@@ -82,6 +87,7 @@
 
     </Transition>
 
+    <!-- start일때 각 뷰들의 제약 설정  -->
     <ConstraintSet android:id="@+id/start">
 
         <Constraint
@@ -159,7 +165,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintHorizontal_bias="0.95"
             app:layout_constraintVertical_bias="0.75"/>
 
         <Constraint

@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
+    <!-- 배경과 스크롤시 모션까지의 레이아웃 -->
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/buttonShownMotionLayout"
         android:layout_width="match_parent"
@@ -32,12 +34,14 @@
                     android:layout_height="600dp"
                     android:background="@color/black" />
 
+                <!-- 모션레이아웃 안에 스크롤뷰 안에 모션레이아웃 -->
                 <androidx.constraintlayout.motion.widget.MotionLayout
                     android:id="@+id/gatheringDigitalThingsLayout"
                     android:layout_width="400dp"
                     android:layout_height="300dp"
                     android:layout_gravity="center_horizontal"
                     app:layoutDescription="@xml/gathering_digital_things_scene">
+                    <!-- MotionScene을 참조, MotionScene은 상응하는 레이아웃의 모든 모션 설명을 포함하는 XML리소스 파일   -->
 
                     <ImageView
                         android:id="@+id/tvImageView"
@@ -90,6 +94,7 @@
 
         </ScrollView>
 
+        <!-- Floating 형태로 띄우기 위해 스크롤뷰 밖으로 빼서 선언  -->
         <Button
             android:id="@+id/button"
             android:layout_width="0dp"
@@ -105,6 +110,7 @@
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
 
+    <!-- AppBar(상단바)를 추가 -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
@@ -112,7 +118,8 @@
         android:background="@android:color/transparent"
         android:fitsSystemWindows="false">
 
-        <!-- 이미지를 넣을 영역 -->
+        <!-- 움직이는 AppBar를 위해 필요한 레이아웃, Collapsing : 붕괴,무너지다 -->
+        <!-- AppBarLayout안에 있어야한다. 스크롤 시 접히거나 나타날 부분을 넣는 레이아웃 -->
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
@@ -124,12 +131,15 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:statusBarScrim="@android:color/transparent">
 
+            <!-- View들을 배치하기 위한 레이아웃 -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
+                android:id="@+id/collapsingToolbarContainer"
                 android:layout_height="420dp"
                 android:fitsSystemWindows="false"
                 app:layout_collapseMode="parallax">
 
+                <!-- 이미지를 담을 이미지뷰 -->
                 <ImageView
                     android:id="@+id/introImageView"
                     android:layout_width="match_parent"
@@ -141,7 +151,8 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- ToolBar에 대한 설정 -->
+            <!-- ToolBar에 대한 설정 -> AppBar에서 접혔을때도 남아있는 부분 -->
+            <!-- 툴바 투명, 툴바 백그라운드에 알파값 처리, 스크롤 시 값 변경, 화면이 무너질 때 -->
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -149,10 +160,10 @@
                 android:background="@android:color/transparent"
                 android:elevation="0dp"
                 android:fitsSystemWindows="false"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_collapseMode="pin"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_collapseMode="pin">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -176,16 +187,16 @@
                             android:id="@+id/logoTextView"
                             android:layout_width="120dp"
                             android:layout_height="wrap_content"
+                            android:gravity="center"
                             android:scaleType="centerCrop"
                             android:text="Watching"
                             android:textColor="@color/white"
-                            android:gravity="center"
                             android:textSize="24sp"
                             android:textStyle="bold"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -193,9 +204,9 @@
                             android:layout_marginEnd="16dp"
                             android:text="로그인"
                             android:textColor="@color/white"
-                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

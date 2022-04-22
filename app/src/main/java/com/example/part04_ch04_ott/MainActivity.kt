@@ -7,15 +7,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.part04_ch04_ott.databinding.ActivityMainBinding
 import com.google.android.material.appbar.AppBarLayout
 import kotlin.math.abs
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding    // 뷰바인딩
 
     private var isGateringMotionAnimating: Boolean = false
 
@@ -24,32 +27,40 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        makeStatusBarTransparent()    // StatusBar 투명 처리
+        makeStatusBarTransparent()    // StatusBar 투명 처리 - Activity 클래스에 적용한 확장 함수
+        initAppBar()    // Appbar 투명 처리
         initActionBar()    // 커스텀 ToolBar 적용
+        initInsetMargin()    // 툴바에 안전한 마진을 적용
 
+        // 모션뷰를 담고 있는 스크롤뷰에 대한 리스너 선언
+        // viewTreeObserver : 뷰 트리의 전역 변경 사항을 알릴 수 있는 리스너를 등록
         binding.scrollView.viewTreeObserver.addOnScrollChangedListener {
+            // 스크롤에 150만큼 내려갔을 경우
             if (binding.scrollView.scrollY > 150f.dpToPx(this).toInt()) {
-                if (isGateringMotionAnimating.not()) {
+                // 애니메이션이 동작하고 있지 않을 경우만 새로운 애니메이션 시작
+                if (isGateringMotionAnimating.not()) {    // 시작에서 끝으로
                     binding.gatheringDigitalThingsLayout.transitionToEnd()
                     binding.buttonShownMotionLayout.transitionToEnd()
                 }
+            // 스크롤을 다시 위로 올렸을 경우
             } else {
-                if (isGateringMotionAnimating.not()) {
+                if (isGateringMotionAnimating.not()) {    // 끝에서 시작으로
                     binding.gatheringDigitalThingsLayout.transitionToStart()
                     binding.buttonShownMotionLayout.transitionToStart()
                 }
             }
         }
 
+        // 모션 레이아웃에서 각 애니메이션이 시작될때의 리스너 함수들
         binding.gatheringDigitalThingsLayout.setTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(motionLayout: MotionLayout?, startId: Int, endId: Int) {
-                isGateringMotionAnimating = true
+                isGateringMotionAnimating = true    // 애니메이션 시작할 때 애니메이션이 진행중임을 판단하는 변수 True 처리
             }
 
             override fun onTransitionChange(motionLayout: MotionLayout?, startId: Int, endId: Int, progress: Float) = Unit
 
             override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
-                isGateringMotionAnimating = false
+                isGateringMotionAnimating = false    // 애니메이션이 종료될 경우 False 처리
             }
 
             override fun onTransitionTrigger(motionLayout: MotionLayout?, triggerId: Int, positive: Boolean, progress: Float) = Unit
@@ -58,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    // AppBar를 StatusBar만큼 띄어서 표시하는 함수
+    // 앱바에서 스크롤 시 alpha값 변경
     private fun initAppBar() {
         binding.appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val topPadding = 120f.dpToPx(this)
@@ -72,6 +83,23 @@ class MainActivity : AppCompatActivity() {
             binding.toolbarBackgroundView.alpha = 1 - (if (1 - percentage * 2 < 0) 0f else 1 - percentage * 2)
         })
         initActionBar()
+    }
+
+    // AppBar를 StatusBar만큼 띄어서 표시하는 함수, window에 있는 모든 시스템 영역의 Inset값을 조절
+    private fun initInsetMargin() = with(binding) {
+        ViewCompat.setOnApplyWindowInsetsListener(coordinator) {v: View, insets: WindowInsetsCompat ->
+            val params = v.layoutParams as ViewGroup.MarginLayoutParams
+            params.bottomMargin = insets.systemWindowInsetBottom
+            // 시스템에서 안전하게 줄수있는 margin으로 설정
+            toolbarContainer.layoutParams = (toolbarContainer.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                setMargins(0, insets.systemWindowInsetTop, 0, 0)
+            }
+            collapsingToolbarContainer.layoutParams = (collapsingToolbarContainer.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                setMargins(0, 0, 0, 0)
+            }
+
+            insets.consumeSystemWindowInsets()
+        }
     }
 
     // ToolBar를 커스터마이징
@@ -90,7 +118,8 @@ class MainActivity : AppCompatActivity() {
 }
 
 
-
+// 확장 함수 - 기존 클래스에 원하는 기능을 추가하는 함수 각각 Float클래스와 Activity클래스에 추가
+// dp단위를 Px로 변환
 fun Float.dpToPx(context: Context): Float = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, context.resources.displayMetrics)
 
 // StatusBar를 투명하게 하는 확장함수
@@ -109,10 +138,10 @@ fun Activity.makeStatusBarTransparent() {
 
 1. 모션레이아웃 1차
  - ScrollView
- - MotionLayout
+ - MotionLayout : ConstraintLayout의 서브클래스 , 애니메이션 기반 레이아웃
  - ConstrainitSet
 
-2. 헤더 영역
+2. 헤더 영역 - 어려움
  - App Bar
  - CollapsingToolbar
  - Inset(FitSystemWindow)
