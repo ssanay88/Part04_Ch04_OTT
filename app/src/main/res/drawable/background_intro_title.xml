@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 하단은 검정색이지만 상단은 투명색   -->
+    <gradient android:angle="270" android:endColor="@color/black" android:startColor="@android:color/transparent"/>
+</shape>

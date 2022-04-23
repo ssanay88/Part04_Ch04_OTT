@@ -28,9 +28,20 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         makeStatusBarTransparent()    // StatusBar 투명 처리 - Activity 클래스에 적용한 확장 함수
+        initScrollViewListeners()    // 스크롤 뷰에 대한 인스턴스 생성
+        initMotionLayoutListeners()    //
         initAppBar()    // Appbar 투명 처리
         initActionBar()    // 커스텀 ToolBar 적용
         initInsetMargin()    // 툴바에 안전한 마진을 적용
+
+
+
+
+
+    }
+
+    private fun initScrollViewListeners() {
+        binding.scrollView.smoothScrollTo(0,0)
 
         // 모션뷰를 담고 있는 스크롤뷰에 대한 리스너 선언
         // viewTreeObserver : 뷰 트리의 전역 변경 사항을 알릴 수 있는 리스너를 등록
@@ -42,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                     binding.gatheringDigitalThingsLayout.transitionToEnd()
                     binding.buttonShownMotionLayout.transitionToEnd()
                 }
-            // 스크롤을 다시 위로 올렸을 경우
+                // 스크롤을 다시 위로 올렸을 경우
             } else {
                 if (isGateringMotionAnimating.not()) {    // 끝에서 시작으로
                     binding.gatheringDigitalThingsLayout.transitionToStart()
@@ -50,7 +61,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
+    private fun initMotionLayoutListeners() {
         // 모션 레이아웃에서 각 애니메이션이 시작될때의 리스너 함수들
         binding.gatheringDigitalThingsLayout.setTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(motionLayout: MotionLayout?, startId: Int, endId: Int) {
@@ -66,20 +79,24 @@ class MainActivity : AppCompatActivity() {
             override fun onTransitionTrigger(motionLayout: MotionLayout?, triggerId: Int, positive: Boolean, progress: Float) = Unit
 
         })
-
     }
 
     // 앱바에서 스크롤 시 alpha값 변경
     private fun initAppBar() {
         binding.appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            val topPadding = 120f.dpToPx(this)
+            val topPadding = 300f.dpToPx(this)    // 300까지는 여유를 둔다
+            // 측정한 앱바 높이에서
+            val realAlphaScrollHeight = appBarLayout.measuredHeight - appBarLayout.totalScrollRange
             val abstractOffset = abs(verticalOffset)
+
+            val realAlphaVerticalOffset = if (abstractOffset - topPadding < 0) 0f else abstractOffset - topPadding
+
             if (abstractOffset < topPadding) {
                 binding.toolbarBackgroundView.alpha = 0f
                 return@OnOffsetChangedListener
             }
-            val verticalOffsetByTopPadding = abstractOffset - topPadding
-            val percentage = abs(verticalOffsetByTopPadding) / appBarLayout.totalScrollRange
+
+            val percentage = realAlphaVerticalOffset / realAlphaScrollHeight
             binding.toolbarBackgroundView.alpha = 1 - (if (1 - percentage * 2 < 0) 0f else 1 - percentage * 2)
         })
         initActionBar()

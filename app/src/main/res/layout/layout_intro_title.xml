@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/introTitleContainer"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- 아래는 검정 위로 갈수록 투명하게 변하는 배경으로 지정   -->
+    <View
+        android:id="@+id/backgroundViewIntroTitleTop"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/backgroundViewIntroTitleBottom"
+        android:background="@drawable/background_intro_title" />
+
+    <!-- 모두 검정색으로 지정하여 위의 뷰와 자연스럽게 연결되도록 설정 -->
+    <View
+        android:id="@+id/backgroundViewIntroTitleBottom"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/backgroundViewIntroTitleTop"
+        android:background="@color/black"/>
+
+    <!-- 그려진 뷰 위에 원하는 텍스트를 입력  -->
+    <TextView
+        android:id="@+id/introTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="지금 무료로\n무제한 감상 시작"
+        android:textColor="@color/white"
+        android:gravity="center_horizontal"
+        android:textStyle="bold"
+        android:textSize="32sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
